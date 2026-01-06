@@ -1,0 +1,49 @@
+name: Automated Reel Pipeline
+
+on:
+  schedule:
+    # GitHub uses UTC
+    # 12:00 AM IST  = 18:30 UTC (previous day)
+    # 12:00 PM IST  = 06:30 UTC
+    - cron: "30 18 * * *"
+    - cron: "30 6 * * *"
+
+  workflow_dispatch: # allows manual trigger
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run pipeline
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ELEVENLABS_KEYS: ${{ secrets.ELEVENLABS_KEYS }}
+
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+
+          IG_BUSINESS_ID: ${{ secrets.IG_BUSINESS_ID }}
+          IG_TOKEN: ${{secrets.IG_TOKEN}}
+
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+
+        run: node index.js
