@@ -12,7 +12,7 @@ const CONFIG = {
   fb: { pageId: process.env.FB_PAGE_ID, token: process.env.FB_PAGE_TOKEN },
   ig: {
     businessId: process.env.IG_BUSINESS_ID,
-    token: process.env.IG_TOKEN,
+    token: process.env.FB_PAGE_TOKEN,
   },
   yt: {
     clientId: process.env.YT_CLIENT_ID,

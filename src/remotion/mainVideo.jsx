@@ -175,9 +175,6 @@ export const MainVideo = ({ data, audioPath, timestamps }) => {
   ${interpolate(progress, [0, 1], [b1, b2])}
 )`;
 
-  const OUTRO_FRAMES = 36; // ~1.2s at 30fps
-  const isOutro = isLastScene && frame > scene.end - OUTRO_FRAMES;
-
   return (
     <AbsoluteFill
       style={{
@@ -270,7 +267,8 @@ export const MainVideo = ({ data, audioPath, timestamps }) => {
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "center",
-              columnGap: "40px",
+              // columnGap: "40px",
+              columnGap: `${Math.max(16, baseSize * 0.03)}px`,
               textAlign: "center",
               maxWidth: "90%",
             }}
@@ -414,16 +412,17 @@ export const MainVideo = ({ data, audioPath, timestamps }) => {
                     rotateZ(${rotation}deg)
                   `,
                     filter: blur > 0 ? `blur(${blur}px)` : "none",
-                    fontSize: isHero ? baseSize * 0.12 : baseSize * 0.1,
                     lineHeight: 1.4,
                     fontFamily: "'Amiri', serif",
                     fontWeight: isHero ? 700 : 400,
                     color: isHero ? activeTheme.accent : activeTheme.text,
                     letterSpacing: `${letterSpacing}px`,
-                    whiteSpace: "nowrap",
+                    // whiteSpace: "nowrap",
+                    fontSize: isHero ? baseSize * 0.12 : baseSize * 0.1,
+                    whiteSpace: token.text.length > 12 ? "normal" : "nowrap",
+
                     transition: "none",
                     alignSelf: "baseline",
-                    // border: "2px solid black",
                   }}
                 >
                   {token.text}
@@ -432,65 +431,6 @@ export const MainVideo = ({ data, audioPath, timestamps }) => {
             })}
           </div>
         </div>
-      )}
-
-      {isOutro && (
-        <AbsoluteFill
-          style={{
-            backgroundColor: bgColor,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 20,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 28,
-              textAlign: "center",
-            }}
-          >
-            {/* REFLECTION */}
-            <div
-              style={{
-                fontFamily: "'Amiri', serif",
-                fontSize: baseSize * 0.075,
-                lineHeight: 1.3,
-                color: activeTheme.text,
-                maxWidth: "80%",
-              }}
-            >
-              Let this wisdom stay with you.
-            </div>
-
-            {/* DIVIDER */}
-            <div
-              style={{
-                width: 120,
-                height: 2,
-                backgroundColor: activeTheme.accent,
-                opacity: 0.6,
-              }}
-            />
-
-            {/* BRAND */}
-            <div
-              style={{
-                fontFamily: "'Amiri', serif",
-                fontSize: baseSize * 0.05,
-                letterSpacing: 3,
-                textTransform: "uppercase",
-                color: activeTheme.accent,
-                opacity: 0.85,
-              }}
-            >
-              Islamic Quotes
-            </div>
-          </div>
-        </AbsoluteFill>
       )}
 
       {/* Handle use this later on */}
