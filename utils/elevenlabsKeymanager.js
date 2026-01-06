@@ -7,7 +7,6 @@ async function getClientWithCredits(minCharsNeeded = 0) {
     throw new Error("No ElevenLabs API keys provided");
   }
 
-  console.log("KEYS => ", KEYS);
   for (const apiKey of KEYS) {
     try {
       const client = new ElevenLabsClient({ apiKey });
