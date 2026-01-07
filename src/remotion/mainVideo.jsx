@@ -186,7 +186,7 @@ export const MainVideo = ({ data, audioPath, timestamps }) => {
       }}
     >
       {audioPath && <Audio src={staticFile(audioPath)} />}
-      {audioPath && <Audio src={staticFile("nasheed_2.mp3")} volume={0.1} />}
+      {audioPath && <Audio src={staticFile("nasheed_2.mp3")} volume={0.05} />}
 
       {frame === 0 ? (
         <div
