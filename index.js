@@ -60,7 +60,7 @@ async function main() {
         },
         yt: {
           title: script.title,
-          description: `${script.caption}\n\n${script.hashtags.join(" ")}`,
+          description: script.caption,
           tags: script.hashtags,
         },
       },
