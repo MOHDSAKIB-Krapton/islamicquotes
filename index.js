@@ -9,6 +9,7 @@ const {
   cleanupGeneratedAssets,
   allPlatformsSucceeded,
 } = require("./utils/cleanupGeneratedAssets");
+const { PREDEFINED_YOUTUBE_SHORTS_HASHTAGS } = require("./constant");
 
 async function main() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -56,11 +57,17 @@ async function main() {
           description: `${script.caption}\n\n${script.hashtags.join(" ")}`,
         },
         ig: {
-          caption: `${script.caption}\n\n${script.hashtags.join(" ")}`,
+          caption: `${script.title} ${PREDEFINED_YOUTUBE_SHORTS_HASHTAGS.join(
+            " "
+          )}\n\n\n\n${script.caption}\n\n${script.hashtags.join(" ")}`,
         },
         yt: {
-          title: script.title,
-          description: script.caption,
+          title: `${script.title} ${script.hashtags
+            .slice(0, 3)
+            .join(" ")} ${PREDEFINED_YOUTUBE_SHORTS_HASHTAGS.join(" ")}`,
+          description: `${script.caption}\n\n${script.hashtags.join(
+            " "
+          )} ${PREDEFINED_YOUTUBE_SHORTS_HASHTAGS.join(" ")}`,
           tags: script.hashtags,
         },
       },
