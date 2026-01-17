@@ -130,19 +130,51 @@ async function uploadToYouTube(videoPath, meta) {
 
     const youtube = google.youtube({ version: "v3", auth: oauth });
 
-    const res = await youtube.videos.insert({
-      part: ["snippet", "status"],
-      requestBody: {
-        snippet: {
-          title: meta.yt.title,
-          description: meta.yt.description,
-          tags: meta.yt.tags || [],
-          categoryId: "22",
+    const res = await youtube.videos.insert(
+      {
+        part: ["snippet", "status", "recordingDetails", "localizations"],
+        notifySubscribers: true,
+        requestBody: {
+          snippet: {
+            title: meta.yt.title,
+            description: meta.yt.description,
+            tags: (meta.yt.tags || []).map((t) => t.replace("#", "")), // Remove # from tags
+            categoryId: "27", // Education
+            defaultLanguage: "en",
+            defaultAudioLanguage: "en",
+          },
+          status: {
+            privacyStatus: "public",
+            selfDeclaredMadeForKids: false,
+            embeddable: true,
+            license: "youtube",
+            publicStatsViewable: true,
+          },
+          recordingDetails: {
+            recordingDate: new Date().toISOString(),
+            location: {
+              latitude: 51.5074,
+              longitude: -0.1278,
+              description: "United Kingdom",
+            },
+          },
+          // localizations: {
+          //   "en-GB": {
+          //     title: meta.yt.title,
+          //     description: meta.yt.description,
+          //   },
+          // },
         },
-        status: { privacyStatus: "public", selfDeclaredMadeForKids: false },
+        media: { body: fs.createReadStream(videoPath) },
       },
-      media: { body: fs.createReadStream(videoPath) },
-    });
+      {
+        // Use resumable upload for better stability
+        onUploadProgress: (evt) => {
+          const progress = (evt.bytesRead / fs.statSync(videoPath).size) * 100;
+          console.log(`🚀 Uploading: ${Math.round(progress)}% complete`);
+        },
+      }
+    );
 
     console.log("✅ YouTube:", res.data.id);
     return { success: true, id: res.data.id, platform: "youtube" };
